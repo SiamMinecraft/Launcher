@@ -321,6 +321,7 @@ public final class Launcher {
      * @param args args
      */
     public static void main(String[] args) {
+		System.setProperty("jsse.enableSNIExtension", "false");
         SimpleLogFormatter.configureGlobalLogger();
 
         LauncherArguments options = new LauncherArguments();
@@ -360,7 +361,6 @@ public final class Launcher {
                 }
             }
         });
-
     }
 
 }

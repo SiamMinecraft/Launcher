@@ -70,11 +70,11 @@ public class Updater extends BaseUpdater implements Callable<Instance>, Progress
         boolean updateDesired = (instance.isUpdatePending() || updateRequired);
         boolean updateCapable = (instance.getManifestURL() != null);
 
-        if (!online && updateRequired) {
+        /*if (!online && updateRequired) {
             log.info("Can't update " + instance.getTitle() + " because offline");
             String message = _("updater.updateRequiredButOffline");
             throw new LauncherException("Update required but currently offline", message);
-        }
+        }*/
 
         if (updateDesired && !updateCapable) {
             if (updateRequired) {
@@ -166,31 +166,36 @@ public class Updater extends BaseUpdater implements Callable<Instance>, Progress
         installLibraries(installer, version, launcher.getLibrariesDir(), librarySources);
 
         // Download assets
-        log.info("Enumerating assets to download...");
-        progress = new DefaultProgress(-1, _("instanceUpdater.collectingAssets"));
-        installAssets(installer, version, launcher.propUrl("assetsIndexUrl", version.getAssetsIndex()), assetsSources);
+        try {
+            log.info("Enumerating assets to download...");
+            progress = new DefaultProgress(-1, _("instanceUpdater.collectingAssets"));
+            installAssets(installer, version, launcher.propUrl("assetsIndexUrl", version.getAssetsIndex()), assetsSources);
 
-        log.info("Executing download phase...");
-        progress = ProgressFilter.between(installer.getDownloader(), 0, 0.98);
-        installer.download();
+            log.info("Executing download phase...");
+            progress = ProgressFilter.between(installer.getDownloader(), 0, 0.98);
+            installer.download();
 
-        log.info("Executing install phase...");
-        progress = ProgressFilter.between(installer, 0.98, 1);
-        installer.execute();
+            log.info("Executing install phase...");
+            progress = ProgressFilter.between(installer, 0.98, 1);
+            installer.execute();
 
-        log.info("Completing...");
-        complete();
+            log.info("Completing...");
+            complete();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+            // Update the instance's information
+            log.info("Writing instance information...");
+            instance.setVersion(manifest.getVersion());
+            instance.setUpdatePending(false);
+            instance.setInstalled(true);
+            instance.setLocal(true);
+            Persistence.commitAndForget(instance);
 
-        // Update the instance's information
-        log.info("Writing instance information...");
-        instance.setVersion(manifest.getVersion());
-        instance.setUpdatePending(false);
-        instance.setInstalled(true);
-        instance.setLocal(true);
-        Persistence.commitAndForget(instance);
-
-        log.log(Level.INFO, instance.getName() +
-                " has been updated to version " + manifest.getVersion() + ".");
+            log.log(Level.INFO, instance.getName() +
+                    " has been updated to version " + manifest.getVersion() + ".");
     }
 
     @Override

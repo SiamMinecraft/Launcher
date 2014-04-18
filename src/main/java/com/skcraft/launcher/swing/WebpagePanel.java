@@ -227,6 +227,7 @@ public final class WebpagePanel extends JPanel {
                 conn.setDoOutput(false);
                 conn.setReadTimeout(5000);
 
+                log.log(Level.INFO, "Connecting to " + url.toString());
                 conn.connect();
 
                 checkInterrupted();

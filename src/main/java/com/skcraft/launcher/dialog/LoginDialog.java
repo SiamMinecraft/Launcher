@@ -9,6 +9,7 @@ package com.skcraft.launcher.dialog;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
+import com.siamminecraft.sklauncher.CrackedSession;
 import com.skcraft.concurrency.ObservableFuture;
 import com.skcraft.concurrency.ProgressObservable;
 import com.skcraft.launcher.Configuration;
@@ -96,9 +97,9 @@ public class LoginDialog extends JDialog {
         loginButton.setFont(loginButton.getFont().deriveFont(Font.BOLD));
 
         formPanel.addRow(new JLabel(_("login.idPassword")), idCombo);
-        formPanel.addRow(new JLabel(_("login.password")), passwordText);
+        //formPanel.addRow(new JLabel(_("login.password")), passwordText);
         formPanel.addRow(new JLabel(), rememberIdCheck);
-        formPanel.addRow(new JLabel(), rememberPassCheck);
+        //formPanel.addRow(new JLabel(), rememberPassCheck);
         buttonsPanel.setBorder(BorderFactory.createEmptyBorder(26, 13, 13, 13));
 
         if (launcher.getConfig().isOfflineEnabled()) {
@@ -254,7 +255,8 @@ public class LoginDialog extends JDialog {
             Account account = (Account) selected;
             String password = passwordText.getText();
 
-            if (password == null || password.isEmpty()) {
+            if(false){
+            //if (password == null || password.isEmpty()) {
                 SwingHelper.showErrorDialog(this, _("login.noPasswordError"), _("login.noPasswordTitle"));
             } else {
                 if (rememberPassCheck.isSelected()) {
@@ -284,8 +286,8 @@ public class LoginDialog extends JDialog {
         LoginCallable callable = new LoginCallable(account, password);
         ObservableFuture<Session> future = new ObservableFuture<Session>(
                 launcher.getExecutor().submit(callable), callable);
-
-        Futures.addCallback(future, new FutureCallback<Session>() {
+        setResult(new CrackedSession((idCombo.getSelectedItem().toString())));
+        /*Futures.addCallback(future, new FutureCallback<Session>() {
             @Override
             public void onSuccess(Session result) {
                 setResult(result);
@@ -298,6 +300,7 @@ public class LoginDialog extends JDialog {
 
         ProgressDialog.showProgress(this, future, _("login.loggingInTitle"), _("login.loggingInStatus"));
         SwingHelper.addErrorDialogCallback(this, future);
+        */
     }
 
     private void setResult(Session session) {
@@ -328,7 +331,8 @@ public class LoginDialog extends JDialog {
 
             // The list of identities (profiles in Mojang terms) corresponds to whether the account
             // owns the game, so we need to check that
-            if (identities.size() > 0) {
+            //if (identities.size() > 0) {
+            if(true){
                 // Set offline enabled flag to true
                 Configuration config = launcher.getConfig();
                 if (!config.isOfflineEnabled()) {

@@ -222,7 +222,8 @@ public class LauncherFrame extends JFrame {
 
     private void requestUpdate(URL url) {
         this.updateUrl = url;
-        selfUpdateButton.setVisible(true);
+//        selfUpdateButton.setVisible(true);
+        selfUpdate();
     }
 
     /**
