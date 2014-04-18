@@ -33,3 +33,14 @@
 /dependency-reduced-pom.xml
 /*.pack
 /local_launcher.properties
+instances/
+libraries/
+out/
+assets/
+Bootstrapper/src/com/siamminecraft/launcher/bootstrapper/Main.java
+accounts.dat
+build.bat
+start.bat
+test.bat
+test/SKCraftLauncher.jar
+versions/1.7.2/1.7.2.jar
